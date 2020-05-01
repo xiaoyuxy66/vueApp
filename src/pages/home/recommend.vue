@@ -6,11 +6,13 @@
     </div>
     <ul class="recommend-list" v-else>
       <li class="recommend-item" v-for="(item,index) in recommends" :key="index">
-        <router-link 
-          class="recommend-link" 
+        <router-link
+          class="recommend-link"
           :to="{name: 'home-product',params: {id: item.baseinfo.itemId}}"
         >
-          <p class="recommend-pic"><img :src="item.baseinfo.picUrlNew"/></p>
+          <p class="recommend-pic">
+            <img v-lazy="item.baseinfo.picUrlNew"/><!--懒加载-->
+          </p>
           <p class="recommend-name">{{item.name.shortName}}</p>
           <p class="recommend-origPrice"><del>¥{{item.price.origPrice}}</del></p>
           <p class="recommend-info">
@@ -23,38 +25,40 @@
   </div>
 </template>
 <script>
-import { getHomeRecommend } from 'api/home';
-import MeLoading from 'base/loading';
-export default {
-  name:'HomeRecommend',
-  components:{
-    MeLoading
-  },
-  data(){
-    return{
-      recommends:[],
-      curPage:1,
-      totalPage:1
-    }
-  },
-  created(){
-    this.getRecommend();
-  },
-  methods:{
-    getRecommend(){
-      if(this.curPage>this.totalPage){
-        return;
-      }
-      return getHomeRecommend(this.curPage).then(res=>{
-        if(res){
-          this.curPage++;
-          this.totalPage = res.totalPage;
-          //this.recommends=this.recommends.concat(res.itemList);
+  import { getHomeRecommend } from 'api/home';
+  import MeLoading from 'base/loading';
+  export default {
+    name: 'HomeRecommend',
+    components: {
+      MeLoading
+    },
+    data() {
+      return {
+        recommends: [],
+        curPage: 1,
+        totalPage: 1
+      };
+    },
+    created() {
+      this.getRecommend();
+    },
+    methods: {
+      getRecommend() {
+        if (this.curPage > this.totalPage) {
+          return;
         }
-      });
+        return getHomeRecommend(this.curPage).then(res => {
+          if (res) {
+            this.curPage++;
+            this.totalPage = res.totalPage;
+            this.recommends = this.recommends.concat(res.itemList);
+            // 滚动条由于异步的原因 不能用，需要数据加载完去更新一下滚动条
+            this.$emit('loaded', this.recommends);
+          }
+        });
+      }
     }
-  }
-}
+  };
 </script>
 <style lang="scss" scoped>
 @import '~assets/scss/mixins';

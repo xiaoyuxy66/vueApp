@@ -3,10 +3,10 @@
     <header class="g-headere-container">
       <home-header/>
     </header>
-    <me-scroll>
+    <me-scroll :dataObject='recommends'>
        <home-slider></home-slider>
        <home-nav></home-nav>
-       <home-recommend></home-recommend>
+       <home-recommend @loaded="getCommends"></home-recommend>
     </me-scroll>
 
     <div class="g-backtop-container"></div>
@@ -22,7 +22,7 @@
     name: 'Home',
     data() {
       return {
-
+        recommends: []
       };
     },
     components: {
@@ -31,6 +31,14 @@
       MeScroll,
       HomeNav,
       HomeRecommend
+    },
+    methods: {
+      // updateScroll(){
+
+      // },
+      getCommends(recommends) {
+        this.recommends = recommends;
+      }
     }
   };
 </script>

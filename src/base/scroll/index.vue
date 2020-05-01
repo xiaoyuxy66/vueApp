@@ -34,10 +34,18 @@
       scrollbar: {
         type: Boolean,
         default: true
+      },
+      dataObject: {
+        type: [Array, Object] // 可以是数组可以是对象
       }
     },
     created() {
       // this.init();
+    },
+    watch: {
+      dataObject() {
+        this.update();
+      }
     },
     methods: {
       init() {
@@ -52,6 +60,10 @@
             hide: true
           }
         };
+      },
+      update() {
+        console.log(this.$refs.swiper);
+        this.$refs.swiper && this.$refs.swiper.swiper.update();
       }
     }
   };

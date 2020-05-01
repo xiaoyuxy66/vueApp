@@ -11,13 +11,13 @@
   </nav>
 </template>
 <script>
-import {navItems} from './config';
-export default {
-  name:'HomeNav',
-  created(){
-    this.navItemList=navItems; //不需要响应数据变化的变量可以不放在data里面
-  }
-}
+  import {navItems} from './config';
+  export default {
+    name: 'HomeNav',
+    created() {
+      this.navItemList = navItems; // 不需要响应数据变化的变量可以不放在data里面
+    }
+  };
 </script>
 <style lang="scss" scoped>
 @import '~assets/scss/mixins';
