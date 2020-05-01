@@ -45,17 +45,23 @@
     methods: {
       getRecommend() {
         if (this.curPage > this.totalPage) {
-          return;
+          return Promise.reject(new Error('返回为空'));
         }
         return getHomeRecommend(this.curPage).then(res => {
-          if (res) {
-            this.curPage++;
-            this.totalPage = res.totalPage;
-            this.recommends = this.recommends.concat(res.itemList);
-            // 滚动条由于异步的原因 不能用，需要数据加载完去更新一下滚动条
-            this.$emit('loaded', this.recommends);
-          }
+          return new Promise(resolve=>{
+            if (res) {
+              this.curPage++;
+              this.totalPage = res.totalPage;
+              this.recommends = this.recommends.concat(res.itemList);
+              // 滚动条由于异步的原因 不能用，需要数据加载完去更新一下滚动条
+              this.$emit('loaded', this.recommends);
+              resolve();
+            }
+          })
         });
+      },
+      update() {
+        return this.getRecommend(); //this.getRecommend()变成promise对象
       }
     }
   };

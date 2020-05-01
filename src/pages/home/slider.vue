@@ -49,6 +49,9 @@
           // console.log(data,"dara")
           this.sliders = data;
         });
+      },
+      update(){
+        return this.getSlider();//返回一个promise对象
       }
     }
   };

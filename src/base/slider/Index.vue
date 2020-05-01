@@ -54,6 +54,17 @@
         }
       }
     },
+    watch:{
+      //swipe无缝滚动的一些问题解决方式
+      data(newValue){
+        if(newValue.length===0){
+          return;
+        }
+        //swipe 1张图片无缝滚动的问题
+        this.swiperOption.loop = newData.length === 1 ? false : this.loop;
+        this.keyId = Math.random();
+      }
+    },
     created() {
       this.init();
     },
@@ -67,12 +78,12 @@
             disableOnInteraction: false // 自动滚动的时候 如果手指滑动是否停止自动轮播
           } : false,
           slidesPerView: 1, // 容器同时可以看到的图片
-          loop: this.data.length <= 1 ? false : this.loop, // 是否开启无缝滚动
+          loop: this.data.length <= 1 ? false : this.loop, // 是否开启无缝滚动如果只有一张图片不开启否则开启
           pagination: {
             el: this.pagination ? '.swiper-pagination' : null // 分页器
           }
         };
-      }
+      },
     }
   };
 </script>

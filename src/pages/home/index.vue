@@ -3,10 +3,16 @@
     <header class="g-headere-container">
       <home-header/>
     </header>
-    <me-scroll :dataObject='recommends'>
-       <home-slider></home-slider>
+    <me-scroll 
+      :dataObject='recommends' 
+      pullDown
+      pullUp
+      @pull-down="pullToRefresh"
+      @pull-up="pullToLoadMore"
+    >
+       <home-slider ref="slider"></home-slider>
        <home-nav></home-nav>
-       <home-recommend @loaded="getCommends"></home-recommend>
+       <home-recommend @loaded="getCommends" ref="recommend"></home-recommend>
     </me-scroll>
 
     <div class="g-backtop-container"></div>
@@ -38,6 +44,19 @@
       // },
       getCommends(recommends) {
         this.recommends = recommends;
+      },
+      pullToRefresh(end){
+        // setTimeout(() =>{
+        //   console.log('下拉刷新');
+        //   end();
+        // },1000);
+        this.$refs.slider.update().then(end);
+      },
+      pullToLoadMore(end){
+        this.$refs.recommend.update().then(end).catch(err=>{
+          console.log(err);
+          end();
+        });
       }
     }
   };
