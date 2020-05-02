@@ -50,8 +50,8 @@
           this.sliders = data;
         });
       },
-      update(){
-        return this.getSlider();//返回一个promise对象
+      update() {
+        return this.getSlider();// 返回一个promise对象
       }
     }
   };

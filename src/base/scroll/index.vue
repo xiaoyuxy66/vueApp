@@ -35,9 +35,9 @@
     name: 'MeScroll',
     data() {
       return {
-        pullFlag:false,//是否正在下拉加载的标识位
-        pullDownText:PULL_DOWN_TEXT_INIT,
-        pullUpText:PULL_UP_TEXT_INIT,
+        pullFlag: false, // 是否正在下拉加载的标识位
+        pullDownText: PULL_DOWN_TEXT_INIT,
+        pullUpText: PULL_UP_TEXT_INIT
       };
     },
     components: {
@@ -50,11 +50,11 @@
         type: Boolean,
         default: true
       },
-      pullDown:{
+      pullDown: {
         type: Boolean,
         default: true
       },
-      pullUp:{
+      pullUp: {
         type: Boolean,
         default: true
       },
@@ -63,7 +63,7 @@
       }
     },
     created() {
-       this.init();
+      this.init();
     },
     watch: {
       dataObject() {
@@ -82,15 +82,15 @@
             // 停止滚动后自动隐藏
             hide: true
           },
-          //swiper绑定事件
-          on:{
-            sliderMove:this.scroll, //下拉
-            touchEnd:this.touchEnd, //松手
+          // swiper绑定事件
+          on: {
+            sliderMove: this.scroll, // 下拉
+            touchEnd: this.touchEnd, // 松手
             transitionEnd: this.scrollEnd // 向上滑动时监听scrollEnd
           }
         };
       },
-      //recommend 异步加载之后滚动条要更新，否则不滚动
+      // recommend 异步加载之后滚动条要更新，否则不滚动
       update() {
         console.log(this.$refs.swiper);
         this.$refs.swiper && this.$refs.swiper.swiper.update();
@@ -100,65 +100,69 @@
         this.$refs.swiper && this.$refs.swiper.swiper.slideTo(0, speed, runCallbacks);
       },
 
-      scroll(){
-        let swiper=this.$refs.swiper.swiper;
-        console.log(swiper.translate); //>0下拉，<0上拉
-        if(this.pullFlag){
+      scroll() {
+        let swiper = this.$refs.swiper.swiper;
+        console.log(swiper.translate); // >0下拉，<0上拉
+
+        // 监控什么时候出现回到顶部
+        this.$emit('scroll', swiper.translate, this.$refs.swiper.swiper);
+
+        if (this.pullFlag) {
           return;
         }
-        if(swiper.translate>0){
-          //不需要下拉加载
-          if(!this.pullDown){
+        if (swiper.translate > 0) {
+          // 不需要下拉加载
+          if (!this.pullDown) {
             return;
           }
-          if(swiper.translate>PULL_DOWN_HEIGHT){
-            //this.pullDownText="" 这种形式会重新渲染，一闪一闪的
+          if (swiper.translate > PULL_DOWN_HEIGHT) {
+            // this.pullDownText="" 这种形式会重新渲染，一闪一闪的
 
-            //触发这个ref的setText方法
+            // 触发这个ref的setText方法
             this.$refs.pullDownLoading.setText(PULL_DOWN_TEXT_START);
-          }else{
+          } else {
             this.$refs.pullDownLoading.setText(PULL_DOWN_TEXT_INIT);
           }
-        }else if(swiper.isEnd){ // 是否已经滚动到底部  上拉
-          if(!this.pullUp){
+        } else if (swiper.isEnd) { // 是否已经滚动到底部  上拉
+          if (!this.pullUp) {
             return;
           }
-           // 上拉触发条件
+          // 上拉触发条件
           const isPullUp = Math.abs(swiper.translate) + swiper.height - PULL_UP_HEIGHT > parseInt(swiper.$wrapperEl.css('height'));
-          if(isPullUp){
+          if (isPullUp) {
             this.$refs.pullUpLoading.setText(PULL_UP_TEXT_START);
-          }else{
+          } else {
             this.$refs.pullUpLoading.setText(PULL_UP_TEXT_INIT);
           }
         }
       },
-      //滚动氛围快滚，跟滚一次，当快速滚动结束时候触发这个事件
-      scrollEnd(){
+      // 滚动分为快滚，跟滚一次，当快速滚动结束时候触发这个事件
+      scrollEnd() {
         const swiper = this.$refs.swiper.swiper;
-
-        this.$emit('scroll-end', swiper.translate, swiper, this.pulling);
+        // 滚动结束触发，满足一定距离返回顶部出现
+        this.$emit('scroll-end', swiper.translate, swiper, this.pullFlag);
       },
-      //松开手 开始请求数据
-      touchEnd(){
-        let swiper=this.$refs.swiper.swiper;
-        if(this.pullFlag){
+      // 松开手 开始请求数据
+      touchEnd() {
+        let swiper = this.$refs.swiper.swiper;
+        if (this.pullFlag) {
           return;
         }
-        if(swiper.translate>PULL_DOWN_HEIGHT){
-          if(!this.pullDown){
+        if (swiper.translate > PULL_DOWN_HEIGHT) {
+          if (!this.pullDown) {
             return;
           }
 
-          this.pullFlag = true; //标识位
+          this.pullFlag = true; // 标识位
           swiper.allowTouchMove = false;// 禁止触摸
           swiper.setTransition(swiper.params.speed); // 动画
           swiper.setTranslate(PULL_DOWN_HEIGHT);// 回到设定的位置
           swiper.params.virtualTranslate = true;// 定住不给回弹
           this.$refs.pullDownLoading.setText(PULL_DOWN_TEXT_ING); // 变化正在刷新的文字
           // 参数是一个函数。 基础组件不做业务，触发一个事件
-          this.$emit('pull-down',this.pullDownEnd);
-        }else if(swiper.isEnd){
-          //固定写法
+          this.$emit('pull-down', this.pullDownEnd);
+        } else if (swiper.isEnd) {
+          // 固定写法
           const totalHeight = parseInt(swiper.$wrapperEl.css('height'));
           const isPullUp = Math.abs(swiper.translate) + swiper.height - PULL_UP_HEIGHT > totalHeight;
 
@@ -176,8 +180,8 @@
           }
         }
       },
-      //下拉完参数归位
-      pullDownEnd(){
+      // 下拉完参数归位
+      pullDownEnd() {
         const swiper = this.$refs.swiper.swiper;
         this.pullFlag = false;
         this.$refs.pullDownLoading.setText(PULL_DOWN_TEXT_END);
@@ -185,18 +189,18 @@
         swiper.allowTouchMove = true;
         swiper.setTransition(swiper.params.speed);
         swiper.setTranslate(0);
-        //下拉时头部隐藏，然后松手再出来
+        // 下拉时头部隐藏，然后松手再出来
         setTimeout(() => {
           this.$emit('pull-down-transition-end');
         }, swiper.params.speed);
       },
-      pullUpEnd(){
+      pullUpEnd() {
         const swiper = this.$refs.swiper.swiper;
         this.pullFlag = false;
         this.$refs.pullUpLoading.setText(PULL_UP_TEXT_END);
         swiper.params.virtualTranslate = false;
         swiper.allowTouchMove = true;
-        //上拉不需要归位
+        // 上拉不需要归位
       }
     }
   };

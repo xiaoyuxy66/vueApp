@@ -48,7 +48,7 @@
           return Promise.reject(new Error('返回为空'));
         }
         return getHomeRecommend(this.curPage).then(res => {
-          return new Promise(resolve=>{
+          return new Promise(resolve => {
             if (res) {
               this.curPage++;
               this.totalPage = res.totalPage;
@@ -57,11 +57,11 @@
               this.$emit('loaded', this.recommends);
               resolve();
             }
-          })
+          });
         });
       },
       update() {
-        return this.getRecommend(); //this.getRecommend()变成promise对象
+        return this.getRecommend(); // this.getRecommend()变成promise对象
       }
     }
   };

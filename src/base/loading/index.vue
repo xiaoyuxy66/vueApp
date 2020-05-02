@@ -32,15 +32,15 @@
         loadingText: this.text
       };
     },
-    watch:{
+    watch: {
       // cityName(newName, oldName) {},
-      text(text){
-        this.loadingText=text;
+      text(text) {
+        this.loadingText = text;
       }
     },
-    methods:{
-      setText(text){
-        this.loadingText=text;
+    methods: {
+      setText(text) {
+        this.loadingText = text;
       }
     }
   };
