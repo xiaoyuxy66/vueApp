@@ -52,11 +52,11 @@
       },
       pullDown: {
         type: Boolean,
-        default: true
+        default: false
       },
       pullUp: {
         type: Boolean,
-        default: true
+        default: false
       },
       dataObject: {
         type: [Array, Object] // 可以是数组可以是对象

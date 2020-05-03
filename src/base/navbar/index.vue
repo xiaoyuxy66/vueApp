@@ -51,7 +51,7 @@
     flex: 1;
     margin-left: 10px;
     margin-right: 10px;
-    text-align: center;
+    // text-align: center;
     ~.mine-navbar-right{
       position: static; //如果不止右边图标就不是绝对顶对，巧用所有弟弟选择器
     }
