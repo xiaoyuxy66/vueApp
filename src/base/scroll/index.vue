@@ -92,8 +92,12 @@
       },
       // recommend 异步加载之后滚动条要更新，否则不滚动
       update() {
-        console.log(this.$refs.swiper);
-        this.$refs.swiper && this.$refs.swiper.swiper.update();
+        //console.log(this.$refs.swiper);
+
+        // 确保dom已经渲染完毕
+        this.$nextTick(()=>{
+          this.$refs.swiper && this.$refs.swiper.swiper.update();
+        });
       },
       // 返回顶部
       scrollToTop(speed, runCallbacks) {
