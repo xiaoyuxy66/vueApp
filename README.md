@@ -45,3 +45,9 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 1. scss _iconfonts.scss 下划线文件scss内部文件
 2. scss 引用scss文件前面要加～
 3. 放在data里面的数据自动添加get set方法，是响应数据变化的数据，对于不需要响应变化的，直接放在created里面就可以
+4. axios 多次请求取消上一次请求  category
+5. 截流函数 
+6. mixin 提取共用js
+7. transition/transition-group
+8. $nextTick
+9. .native 自定义组件想要使用原生的方法要用native,组织冒泡用.stop
